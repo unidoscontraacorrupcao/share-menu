@@ -11,14 +11,14 @@ import '../@polymer/paper-dialog/paper-dialog.js';
 import '../@polymer/paper-ripple/paper-ripple.js';
 import '../@polymer/paper-toast/paper-toast.js';
 import '../@polymer/paper-icon-button/paper-icon-button.js';
-import '../@polymer/neon-animation/neon-animation.js';
+import '../@polymer/neon-animation/neon-animations.js';
 import '../@polymer/neon-animation/animations/scale-up-animation.js';
 import '../@polymer/neon-animation/animations/scale-down-animation.js';
 import './social-icons.js';
 import { html } from '../@polymer/polymer/lib/utils/html-tag.js';
 import { flush } from '../@polymer/polymer/lib/legacy/polymer.dom.js';
 import { addListener } from '../@polymer/polymer/lib/utils/gestures.js';
-import '../clipboard/dist/clipboard.min.js';
+//import '../clipboard/dist/clipboard.min.js';
 /**
  * `share-menu` is a complete and simple to use share menu for Polymer 2 that uses
  * [Web Share API](https://developers.google.com/web/updates/2016/10/navigator-share) when possible,
@@ -199,14 +199,14 @@ class ShareMenu extends GestureEventListeners(PolymerElement) {
     </style>
 
     <paper-toast id="copySuccess" text="[[copySuccessText]]"></paper-toast>
-    <paper-dialog id="copyDialog" entry-animation="scale-up-animation" exit-animation="scale-down-animation" with-backdrop="[[!withoutBackdrop]]">
+    <paper-dialog id="copyDialog" with-backdrop="[[!withoutBackdrop]]">
       <div id="urlHeader">[[copyFailedText]]</div>
       <div id="urlContainer">
         <a href\$="[[url]]" id="url">[[url]]</a>
       </div>
     </paper-dialog>
 
-    <paper-dialog id="shareDialog" entry-animation="scale-up-animation" exit-animation="scale-down-animation" with-backdrop="[[!withoutBackdrop]]">
+    <paper-dialog id="shareDialog"  with-backdrop="[[!withoutBackdrop]]">
       <h2 id="dialogTitle">[[dialogTitle]]</h2>
       <paper-dialog-scrollable id="shareButtons">
 
@@ -222,7 +222,7 @@ class ShareMenu extends GestureEventListeners(PolymerElement) {
         <dom-if if="[[_isEnabledServices(enabledServices, 'facebook')]]">
           <template>
             <div class="social" title="Facebook">
-              <paper-icon-button class="icon" icon="social:facebook" style="background-color: #3b5998;" id="facebook"></paper-icon-button>
+              <paper-icon-button class="icon" icon="social:facebook" on-tap="_facebookTap" style="background-color: #3b5998;" id="facebook"></paper-icon-button>
               <div hidden\$="[[hideLabels]]">Facebook</div>
             </div>
           </template>
@@ -230,7 +230,7 @@ class ShareMenu extends GestureEventListeners(PolymerElement) {
         <dom-if if="[[_isEnabledServices(enabledServices, 'twitter')]]">
           <template>
             <div class="social" title="Twitter">
-              <paper-icon-button class="icon" icon="social:twitter" style="background-color: #1da1f2;" id="twitter"></paper-icon-button>
+              <paper-icon-button class="icon" on-tap="_twitterTap" icon="social:twitter" style="background-color: #1da1f2;" id="twitter"></paper-icon-button>
               <div hidden\$="[[hideLabels]]">Twitter</div>
             </div>
           </template>
@@ -238,7 +238,7 @@ class ShareMenu extends GestureEventListeners(PolymerElement) {
         <dom-if if="[[_isEnabledServices(enabledServices, 'whatsapp')]]">
           <template>
             <div class="social" title="WhatsApp">
-              <paper-icon-button class="icon" icon="social:whatsapp" style="background-color: #25d366;" id="whatsapp"></paper-icon-button>
+              <paper-icon-button class="icon" icon="social:whatsapp" on-tap="_whatsappTap" style="background-color: #25d366;" id="whatsapp"></paper-icon-button>
               <div hidden\$="[[hideLabels]]">WhatsApp</div>
             </div>
           </template>
@@ -246,7 +246,7 @@ class ShareMenu extends GestureEventListeners(PolymerElement) {
         <dom-if if="[[_isEnabledServices(enabledServices, 'telegram')]]">
           <template>
             <div class="social" title="Telegram">
-              <paper-icon-button class="icon" icon="social:telegram" style="background-color: #0088cc;" id="telegram"></paper-icon-button>
+              <paper-icon-button class="icon" icon="social:telegram" on-tap="_telegramTap" style="background-color: #0088cc;" id="telegram"></paper-icon-button>
               <div hidden\$="[[hideLabels]]">Telegram</div>
             </div>
           </template>
@@ -510,7 +510,7 @@ class ShareMenu extends GestureEventListeners(PolymerElement) {
         <dom-if if="[[_isEnabledServices(enabledServices, 'email')]]">
           <template>
             <div class="social" title="Email">
-              <paper-icon-button class="icon" icon="social:email" style="background-color: #ffa930;" id="email"></paper-icon-button>
+              <paper-icon-button class="icon" icon="social:email" on-tap="_emailTap" style="background-color: #ffa930;" id="email"></paper-icon-button>
               <div hidden\$="[[hideLabels]]">Email</div>
             </div>
           </template>
@@ -650,15 +650,20 @@ class ShareMenu extends GestureEventListeners(PolymerElement) {
         type: Boolean,
         value: false,
       },
+      FB: {
+        type: Boolean,
+        value: false
+      }
     };
   }
 
-  connectedCallback() {
-    super.connectedCallback();
+  ready() {
+    super.ready();
 
     if (!this._nativeShare || !this._secureContext) {
       if (this.facebookAppId) {
         const appId = this.facebookAppId;
+        this.FB = true;
         window.fbAsyncInit = function() {
           FB.init({
             appId            : appId,
@@ -686,6 +691,8 @@ class ShareMenu extends GestureEventListeners(PolymerElement) {
           document.head.appendChild(twitterScript);
         }
       }
+      else
+        this.FB = false;
 
       if (this._isEnabledServices(this.enabledServices, 'clipboard')) {
         // Setup the copy to clipboard
@@ -756,7 +763,7 @@ class ShareMenu extends GestureEventListeners(PolymerElement) {
   }
 
   _facebookTap() {
-    if (FB)
+    if (this.FB)
       FB.ui({
         method: 'share',
         quote: this.text,
@@ -962,3 +969,4 @@ class ShareMenu extends GestureEventListeners(PolymerElement) {
 }
 
 window.customElements.define(ShareMenu.is, ShareMenu);
+
