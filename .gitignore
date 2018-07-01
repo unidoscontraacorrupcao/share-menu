@@ -2,3 +2,5 @@
 .idea/
 # bower_components directory
 bower_components/
+
+node_modules

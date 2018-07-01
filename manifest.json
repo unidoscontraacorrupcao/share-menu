@@ -1,0 +1,20 @@
+{
+  "files": {
+    "share-menu.html": {
+      "convertedUrl": "share-menu.js",
+      "exports": {}
+    },
+    "social-icons.html": {
+      "convertedUrl": "social-icons.js",
+      "exports": {}
+    },
+    "index.html": {
+      "convertedUrl": "index.html",
+      "exports": {}
+    },
+    "demo/index.html": {
+      "convertedUrl": "demo/index.html",
+      "exports": {}
+    }
+  }
+}

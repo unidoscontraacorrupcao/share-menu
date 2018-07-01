@@ -6,20 +6,31 @@
 
   <title>share-menu demo</title>
 
-  <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+  <script src="../../@webcomponents/webcomponentsjs/webcomponents-bundle.js"></script>
 
-  <link rel="import" href="../../iron-demo-helpers/demo-pages-shared-styles.html">
-  <link rel="import" href="../../iron-demo-helpers/demo-snippet.html">
-  <link rel="import" href="../../iron-flex-layout/iron-flex-layout.html">
-  <link rel="import" href="../../paper-input/paper-input.html">
-  <link rel="import" href="../../paper-input/paper-textarea.html">
-  <link rel="import" href="../../paper-button/paper-button.html">
-  <link rel="import" href="../../paper-toggle-button/paper-toggle-button.html">
-  <link rel="import" href="../../paper-styles/color.html">
-  <link rel="import" href="../../paper-styles/typography.html">
-  <link rel="import" href="../share-menu.html">
+  <script type="module" src="../../@polymer/iron-demo-helpers/demo-pages-shared-styles.js"></script>
+  <script type="module" src="../../@polymer/iron-demo-helpers/demo-snippet.js"></script>
+  <script type="module" src="../../@polymer/iron-flex-layout/iron-flex-layout.js"></script>
+  <script type="module" src="../../@polymer/paper-input/paper-input.js"></script>
+  <script type="module" src="../../@polymer/paper-input/paper-textarea.js"></script>
+  <script type="module" src="../../@polymer/paper-button/paper-button.js"></script>
+  <script type="module" src="../../@polymer/paper-toggle-button/paper-toggle-button.js"></script>
+  <script type="module" src="../../@polymer/paper-styles/color.js"></script>
+  <script type="module" src="../../@polymer/paper-styles/typography.js"></script>
+  <script type="module" src="../share-menu.js"></script>
 
-  <custom-style>
+  <!-- FIXME(polymer-modulizer):
+        These imperative modules that innerHTML your HTML are
+        a hacky way to be sure that any mixins in included style
+        modules are ready before any elements that reference them are
+        instantiated, otherwise the CSS @apply mixin polyfill won't be
+        able to expand the underlying CSS custom properties.
+        See: https://github.com/Polymer/polymer-modulizer/issues/154
+        -->
+    <script type="module">
+const $_documentContainer = document.createElement('template');
+
+$_documentContainer.innerHTML = `<custom-style>
     <style is="custom-style" include="demo-pages-shared-styles">
       .toggleWrapper {
         @apply --layout-horizontal;
@@ -45,10 +56,16 @@
         color: var(--dark-theme-text-color);
       }
     </style>
-  </custom-style>
+  </custom-style>`;
+
+document.body.appendChild($_documentContainer.content);
+</script>
 </head>
 <body>
-<div class="vertical-section-container centered">
+<script type="module">
+const $_documentContainer = document.createElement('template');
+
+$_documentContainer.innerHTML = `<div class="vertical-section-container centered">
   <h3>Basic share-menu demo</h3>
   <demo-snippet>
     <template>
@@ -69,7 +86,7 @@
             <paper-toggle-button checked="{{hideBackdrop}}"></paper-toggle-button>
           </div>
           <div id="buttonWrapper">
-            <paper-button raised onclick="shareMenu.share()">Share!</paper-button>
+            <paper-button raised="" onclick="shareMenu.share()">Share!</paper-button>
           </div>
 
           <share-menu id="shareMenu" title="[[title]]" text="[[text]]" url="[[url]]" via="[[via]]" hide-labels="[[hideLabels]]" without-backdrop="[[hideBackdrop]]" is-image="auto"></share-menu>
@@ -77,6 +94,9 @@
       </dom-bind>
     </template>
   </demo-snippet>
-</div>
+</div>`;
+
+document.body.appendChild($_documentContainer.content);
+</script>
 </body>
 </html>
