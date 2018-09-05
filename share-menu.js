@@ -771,7 +771,11 @@ class ShareMenu extends GestureEventListeners(PolymerElement) {
         mobile_iframe: true,
       });
     else
-      ShareMenu._openWindow(`https://www.facebook.com/sharer.php?u=${encodeURIComponent(this.url)}&description=${encodeURIComponent(this.title)}%0A%0A${encodeURIComponent(this.text)}`);
+      FB.ui({
+        method: 'share',
+        quote: this.text,
+        href: this.url
+      });
   }
 
   _flipboardTap() {
