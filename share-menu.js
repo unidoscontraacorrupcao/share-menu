@@ -903,9 +903,8 @@ class ShareMenu extends GestureEventListeners(PolymerElement) {
   }
 
   _whatsappTap() {
-    if (this._nativeShare || this._secureContext) {
-      const windowApp = window.open(`whatsapp://send?text=*${encodeURIComponent(this.title)}*%0A%0A${encodeURIComponent(this.text)}%0A%0A${encodeURIComponent(this.url)}`, "whatsappApp");
-    }
+    if (this._nativeShare || this._secureContext)
+      this.share();
     else
       window.open(`https://web.whatsapp.com://send?text=*${encodeURIComponent(this.title)}*%0A%0A${encodeURIComponent(this.text)}%0A%0A${encodeURIComponent(this.url)}`, "whatsappWeb");
   }
